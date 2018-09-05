@@ -31,8 +31,9 @@ public class Burger implements BurgerListCUD {
 		
 	}
 	
+	//버거)전체데이터 출력
 	@Override
-	public ArrayList<BurgerVO> printDataAll() {
+	public ArrayList<BurgerVO> printDataBurger() {
 		ArrayList<BurgerVO> list = null;
 		
 		try {
@@ -66,7 +67,189 @@ public class Burger implements BurgerListCUD {
 		return list;
 		
 	}
+	
+	//버거)이름으로 조회
+	public BurgerVO pickBurger (String burgername) {
+		BurgerVO bvo = null;
+		
+		try {			
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			String sql = "";
+			sql += "SELECT BURGERID, BURGERNAME, PRICE ";
+			sql += "  FROM BURGER ";
+			sql += " WHERE BURGERNAME = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, burgername);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				String str = "";
+				str += rs.getInt(1) + "\t";
+				str += rs.getString(2) + "\t";
+				str += rs.getInt(3);
+				System.out.println(str);
+			} else {
+				System.out.println("데이터 없음!");
+			}
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+		}
+		
+		return bvo;
+		
+	}
 
+	@Override
+	public ArrayList<DrinkVO> printDataDrink() {
+		ArrayList<DrinkVO> list = null;
+		
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT DRINKID, DRINKNAME, PRICE ");
+			sb.append("  FROM DRINK ");
+			sb.append(" ORDER BY DRINKID ");
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			list = new ArrayList<DrinkVO>();
+			while (rs.next()) {
+				list.add(new DrinkVO(rs.getInt("drinkid"),
+									 rs.getString("drinkname"),
+									 rs.getInt("price")));
+				
+				if (list.size() < 1) {
+					list = null;
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+		}
+		
+		return list;
+		
+	}
+
+	@Override
+	public ArrayList<DessertVO> printDataDessert() {
+		ArrayList<DessertVO> list = null;
+		
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT SIDEID, SIDENAME, PRICE ");
+			sb.append("  FROM SIDEMENU ");
+			sb.append(" ORDER BY SIDEID ");
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			list = new ArrayList<DessertVO>();
+			while (rs.next()) {
+				list.add(new DessertVO(rs.getInt("sideid"),
+									   rs.getString("sidename"),
+									   rs.getInt("price")));
+				
+				if (list.size() < 1) {
+					list = null;
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+		}
+		
+		return list;
+		
+	}
+	
+	@Override
+	public ArrayList<SetVO> printDataSet() {
+		ArrayList<SetVO> list = null;
+		
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT SETID, SETNAME, PRICE ");
+			sb.append("  FROM SETMENU ");
+			sb.append(" ORDER BY SETID ");
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			list = new ArrayList<SetVO>();
+			while (rs.next()) {
+				list.add(new SetVO(rs.getInt("setid"),
+								   rs.getString("setname"),
+								   rs.getInt("price")));
+				
+				if (list.size() < 1) {
+					list = null;
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+		}
+		
+		return list;
+		
+	}
+	
+	//세트)아이디로 조회
+		public SetVO pickSet (SetVO vo) {
+			SetVO setvo = null;
+			
+			try {			
+				conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				
+				String sql = "";
+				sql += "SELECT SETID, SETNAME, PRICE ";
+				sql += "  FROM SETMENU ";
+				sql += " WHERE SETID = ? ";
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setInt(1, vo.getSetId());
+								
+				rs = pstmt.executeQuery();
+				
+//				if (rs.next()) {
+//					String str = "";
+//					str += rs.getInt(1) + "\t";
+//					str += rs.getString(2) + "\t";
+//					str += rs.getInt(3);
+//					System.out.println(str);
+//				} else {
+//					System.out.println("데이터 없음!");
+//				}
+			
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+			}
+			
+			return setvo;
+			
+		}
+	
 	@Override
 	public int insertListBurger(ArrayList<BurgerVO> list) {
 		// TODO Auto-generated method stub
@@ -90,6 +273,21 @@ public class Burger implements BurgerListCUD {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
+
+	@Override
+	public int insertListSet(ArrayList<SetVO> list) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	@Override
+	public ArrayList<CustomerVO> printDataCust() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
