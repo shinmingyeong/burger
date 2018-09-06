@@ -1,0 +1,200 @@
+package com.mystudy.burgerproject;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
+
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+import common_util.JDBC_Close;
+
+public class custorder {
+	
+	private static final String DRIVER = "oracle.jdbc.OracleDriver";
+	private	static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+	private	static final String USER = "Burger";
+	private	static final String PASSWORD = "burger";
+	
+	Connection conn;
+	PreparedStatement pstmt;
+	ResultSet rs;
+	
+	static {
+		try {
+			Class.forName(DRIVER);
+			System.out.println(">> 오라클 JDBC 드라이버 로딩 성공!");
+		} catch (ClassNotFoundException e) {
+			System.out.println("[예외발생]");
+			e.printStackTrace();
+		}
+	}
+	
+	Scanner choice = new Scanner(System.in);
+	int pick;
+	ArrayList list = new ArrayList();
+	CustomerVO cvo = new CustomerVO();
+	
+	BurgerVO bvo = new BurgerVO();
+	DrinkVO dvo = new DrinkVO();
+	DessertVO desvo = new DessertVO();
+	SetVO setvo = new SetVO();
+	Burger burger = new Burger();
+	
+	public void start() {
+		System.out.println("주문? 1");
+		
+		pick = choice.nextInt();
+		choice.nextLine();
+	
+		if(pick == 1) {		
+			addCust();
+		} 
+	}
+	
+	public void addCust() {
+		
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				
+			StringBuilder sb = new StringBuilder();
+			sb.append("INSERT INTO CUSTOMER ");
+			sb.append("		(CUSTID, PASSWORD, PHONE) ");
+			sb.append("VALUES(?, ?, ?)");
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			int i=0;
+			System.out.println(++i + " 번 고객으로 주문");
+			System.out.println("아이디를 입력해주세요.");
+			String custid = choice.nextLine();
+			System.out.println("비밀번호를 설정해주세요.");
+			String password = choice.nextLine();
+			
+			System.out.println("핸드폰 번호를 입력해주세요.");
+			String phone = choice.nextLine();
+			
+			pstmt.setString(1, custid);
+			pstmt.setString(2, password);
+			pstmt.setString(3, phone);
+			pstmt.executeUpdate();
+			System.out.println("설정이 되었습니다.");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+			whereEat();
+		}
+	}
+	
+	////////////매장 or 테이크아웃?
+	public void whereEat() {
+		System.out.println("어디서 드시겠습니까?");
+		System.out.println("1.매장 2.테이크아웃 3.처음으로");
+		
+		pick = choice.nextInt();
+		choice.nextLine();
+		
+		if(pick == 1) { //직원에게 전달
+			cvo.setWhereEat("매장");
+		} else if (pick == 2) { //직원에게 전달
+			cvo.setWhereEat("테이크아웃");
+		} else if (pick == 3) {
+			start();
+		} else {
+		System.out.println("다시 선택해주세요.");
+		whereEat();
+		}
+		whatBg();
+		//burger.printDataBurger();
+	}
+	
+	////////////무슨 메뉴?
+//	public void whatMenu() {
+//		System.out.println("1:버거단품 2:음료 3:디저트 4:세트 5:이전으로 6:처음으로 7:장바구니");
+//		
+//		pick = choice.nextInt();
+//		choice.nextLine();
+//		
+//		if(pick == 1) {			
+//			whatBg();
+//		} else if (pick == 2) {
+//			whatDk();
+//		} else if (pick == 3) {
+//			whatDs();
+//		} else if (pick == 4) {
+//			whatSet();
+//		} else if (pick == 5) {
+//			whereEat();
+//		} else if (pick == 6) {
+//			start();
+//		} else if (pick == 7) {
+//			bag();
+//		} else {
+//			System.out.println("다시 선택해주세요.");
+//			whatMenu();
+//		
+//		}
+//	}
+	
+	
+	
+	//버거단품/음료/디저트 메뉴선택
+	public void whatBg() {
+		
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			String sql = "";
+			sql += "INSERT INTO ORDERS ";
+			sql += "	(ORDERID, CUSTID, BURGERID, DRINKID,"
+					+ " DESSERTID, SETID, PRICETOT, ORDERDATE, LIST ) ";
+			sql += "VALUES((SELECT NVL(MAX(ORDERID), 0)+1 FROM ORDERS), "
+					+ "0, "
+					+ "?, ?, ?, ?, ?, sysdate, "
+					+ "(SELECT NVL(MAX(LIST), 0)+1 FROM ORDERS)) ";
+			pstmt = conn.prepareStatement(sql);
+			
+			//---------------------------------
+		
+			int pricetot= bvo.getBgPrice() + dvo.getDkPrice()
+						+ desvo.getDsPrice() + setvo.getSetPrice();
+			
+			System.out.println("버거메뉴를 선택해주세요.");
+			burger.printDataBurger();
+			int burgerid = choice.nextInt();
+			System.out.println("음료메뉴를 선택해주세요.");
+			burger.printDataDrink();
+			int drinkid = choice.nextInt();
+			System.out.println("디저트 메뉴를 선택해주세요.");
+			burger.printDataDessert();
+			int dessertid = choice.nextInt();
+			
+			System.out.println("세트 메뉴를 선택해주세요.");
+
+			//pstmt.setString(1, custid);
+			pstmt.setInt(1, burgerid);
+			pstmt.setInt(2, drinkid);
+			pstmt.setInt(3, dessertid);
+			pstmt.setInt(4, setid);
+			pstmt.setInt(5, pricetot);
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+		}
+
+	}
+	
+	//세트메뉴선택
+	
+
+
+}
