@@ -1,0 +1,34 @@
+public void addCust() {
+		
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				
+			StringBuilder sb = new StringBuilder();
+			sb.append("INSERT INTO CUSTOMER ");
+			sb.append("		(CUSTID, PASSWORD, PHONE) ");
+			sb.append("VALUES(?, ?, ?)");
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			int i=0;
+			System.out.println(++i + " 번 고객으로 주문");
+			System.out.println("아이디를 입력해주세요.");
+			String custid = choice.nextLine();
+			System.out.println("비밀번호를 설정해주세요.");
+			String password = choice.nextLine();
+			
+			System.out.println("핸드폰 번호를 입력해주세요.");
+			String phone = choice.nextLine();
+			
+			pstmt.setString(1, custid);
+			pstmt.setString(2, password);
+			pstmt.setString(3, phone);
+			pstmt.executeUpdate();
+			System.out.println("설정이 되었습니다.");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+			whereEat();
+		}
+	}
