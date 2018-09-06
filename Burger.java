@@ -5,7 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.xml.crypto.Data;
 
 import common_util.JDBC_Close;
 
@@ -58,6 +63,10 @@ public class Burger implements BurgerListCUD {
 				}
 			}
 			
+			for(BurgerVO bvo : list) {
+				System.out.println(bvo);
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -65,7 +74,6 @@ public class Burger implements BurgerListCUD {
 		}
 		
 		return list;
-		
 	}
 	
 	//버거)이름으로 조회
@@ -104,7 +112,46 @@ public class Burger implements BurgerListCUD {
 		return bvo;
 		
 	}
+	
+	//버거)아이디로 조회
+			public BurgerVO pickburger (int burgerid) {
+				BurgerVO burgervo = null;
+				
+				try {			
+					conn = DriverManager.getConnection(URL, USER, PASSWORD);
+					
+					String sql = "";
+					sql += "SELECT BURGERID, BURGERNAME, PRICE ";
+					sql += "  FROM BURGER ";
+					sql += " WHERE BURGERID = ? ";
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setInt(1, burgerid);
+									
+					rs = pstmt.executeQuery();
+					
+					if (rs.next()) {
+						burgervo = new BurgerVO(rs.getInt(1), rs.getString(2), rs.getInt(3));
+						String str = "";
+						str += rs.getInt(1) + "\t";
+						str += rs.getString(2) + "\t";
+						str += rs.getInt(3);
+						System.out.println(str);
+					} else {
+						System.out.println("데이터 없음!");
+					}
+				
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+				}
+				
+				return burgervo;
+				
+			}
 
+	//음료)전체데이터 출력		
 	@Override
 	public ArrayList<DrinkVO> printDataDrink() {
 		ArrayList<DrinkVO> list = null;
@@ -140,7 +187,8 @@ public class Burger implements BurgerListCUD {
 		return list;
 		
 	}
-
+	
+	//디저트)전체데이터 출력
 	@Override
 	public ArrayList<DessertVO> printDataDessert() {
 		ArrayList<DessertVO> list = null;
@@ -177,6 +225,7 @@ public class Burger implements BurgerListCUD {
 		
 	}
 	
+	//세트)전체데이터 출력
 	@Override
 	public ArrayList<SetVO> printDataSet() {
 		ArrayList<SetVO> list = null;
@@ -214,7 +263,7 @@ public class Burger implements BurgerListCUD {
 	}
 	
 	//세트)아이디로 조회
-		public SetVO pickSet (SetVO vo) {
+		public SetVO pickSet (int setid) {
 			SetVO setvo = null;
 			
 			try {			
@@ -226,19 +275,20 @@ public class Burger implements BurgerListCUD {
 				sql += " WHERE SETID = ? ";
 				pstmt = conn.prepareStatement(sql);
 				
-				pstmt.setInt(1, vo.getSetId());
+				pstmt.setInt(1, setid);
 								
 				rs = pstmt.executeQuery();
 				
-//				if (rs.next()) {
-//					String str = "";
-//					str += rs.getInt(1) + "\t";
-//					str += rs.getString(2) + "\t";
-//					str += rs.getInt(3);
-//					System.out.println(str);
-//				} else {
-//					System.out.println("데이터 없음!");
-//				}
+				if (rs.next()) {
+					setvo = new SetVO(rs.getInt(1), rs.getString(2), rs.getInt(3));
+					String str = "";
+					str += rs.getInt(1) + "\t";
+					str += rs.getString(2) + "\t";
+					str += rs.getInt(3);
+					System.out.println(str);
+				} else {
+					System.out.println("데이터 없음!");
+				}
 			
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -250,44 +300,24 @@ public class Burger implements BurgerListCUD {
 			
 		}
 	
-	@Override
-	public int insertListBurger(ArrayList<BurgerVO> list) {
-		// TODO Auto-generated method stub
-		return 0;
+	public static void date () {
+		Date date = new Date();
+		SimpleDateFormat todaydate = new SimpleDateFormat ("yyyy/MM/dd");
+		System.out.println(todaydate.format(date));
+			
 	}
-
-	@Override
-	public int insertListCust(ArrayList<CustomerVO> list) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int insertListDrink(ArrayList<DrinkVO> list) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int insertListDessert(ArrayList<DessertVO> list) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public int insertListSet(ArrayList<SetVO> list) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-
+		
+	
 	@Override
 	public ArrayList<CustomerVO> printDataCust() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public int custOrder(CustomerVO vo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }
