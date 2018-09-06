@@ -1,0 +1,47 @@
+public void whatBg2() {
+				System.out.println("원하시는 구성을 선택해주세요");
+				System.out.println("1단품,2세트");
+
+				pick = choice.nextInt();
+				choice.nextLine();
+				
+				if(pick == 1) {
+					//버거 종류에 따른 세트로
+					whatMenu();
+					//장바구니에 저장
+				}
+				
+				else if (pick == 2) { //일반세트
+					
+					System.out.println("1.세트변경 2. 이전으로");
+					
+					pick = choice.nextInt();
+					choice.nextLine();
+					
+					if(pick==1) {
+						for (int i=0; i<cvo.bgList.size(); i++) {
+							System.out.println(i+1 + "." + cvo.bgList.get(i));
+						}
+						
+						System.out.println("세트로 변경하시겠습니까? 바꾸실 버거번호를 입력해주세요.");
+						
+						pick = choice.nextInt();
+						choice.nextLine();
+						
+						cvo.bgList.remove(pick-1);
+						
+//						setvo = burger.pickSet(pick);
+//						cvo.setList.add(pick-1, setvo.getSetName());
+						
+						System.out.println("세트로 변경되었습니다.");		
+						System.out.println();
+						bag();
+						
+					}
+					 else {
+						System.out.println("주문하지 않은 버거번호 입니다. 다시 확인해주세요.");
+						//단품, 세트 선택 반복
+						whatMenu();
+						}
+					}
+				}
