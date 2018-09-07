@@ -102,21 +102,29 @@ public class custorder {
 				whereEat();
 				
 			} else {
-				System.out.println("접속에 실패하셨습니다.");
-				System.out.println("재시도를 원하시면 <1>, 회원가입을 원하시면 <2> 를 눌러주세요.");
 				
-				pick = choice.nextInt();
-				choice.nextLine();
-				
-				if(pick==1) {
-					login();
-				} else if (pick==2) {
-					addCust();
-				} else {
-					System.out.println("< 1~2 > 다시 선택해주세요.(T_T)");
-					System.out.println("-----------------------------------------------");
-					login();
+				while (pick!=1 || pick !=2 || pick !=3) {
+					System.out.println("접속에 실패하셨습니다.");
+					System.out.println("재시도를 원하시면 <1>, 회원가입을 원하시면 <2>,"
+							+ "종료를 원하시면 <3> 을 눌러주세요.");
+					
+					pick = choice.nextInt();
+					choice.nextLine();
+					
+					if(pick==1) {
+						login();
+					} else if (pick==2) {
+						addCust();
+					} else if(pick==3){
+						System.out.println("감사합니다.");
+						System.out.println("***********************************************");
+						start();
+					} else {
+						System.out.println("< 1~3 > 다시 선택해주세요.(T_T)");
+						System.out.println("-----------------------------------------------");
+					}	
 				}
+				
 			}
 			
 		} catch (SQLException e) {
@@ -238,14 +246,20 @@ public class custorder {
 	           burger.printDataSet();
 	           int selectset = choice.nextInt();
 	           
-	           pstmt.setString(1, id);
-	           pstmt.setInt(2, selectset);
-	           pstmt.setString(3, id);
-	           pstmt.executeUpdate();
+	           System.out.println("수량을 선택해주세요.(0~9)");
 	           
-	           pstmt.executeUpdate();
+	           int num = choice.nextInt();
+	           choice.nextLine();
+	           
+	           for(int i=1; i<=num; i++) {
+		           pstmt.setString(1, id);
+		           pstmt.setInt(2, selectset);
+		           pstmt.setString(3, id);
+		           pstmt.executeUpdate();
+		           pstmt.executeUpdate();
+	           }
+	           System.out.println("세트선택이 완료되었습니다~~~~!^0^");
 	           add(id);
-	           
 	          	           
 	        } catch (SQLException e) {
 	           e.printStackTrace();
@@ -255,23 +269,39 @@ public class custorder {
 		
 	}
 	
+	//추가주문
 	public void add(String id) {
 		
-		 System.out.println("주문이 끝났으면 < 1 >,");
-         System.out.println("추가주문을 원하시면 < 2 > 를 눌러주세요.");
-         
-         pick = choice.nextInt();
-         choice.nextLine();
+		System.out.println("------------------------------------------------"); 
+		System.out.println("주문이 끝났으면 < 1 >,");
+        System.out.println("추가주문을 원하시면 < 2 > 를 눌러주세요.");
+        System.out.println("------------------------------------------------"); 
+        
+        pick = choice.nextInt();
+        choice.nextLine();
          
 		
          if(pick == 1) {
       	   bag();
          } else if (pick == 2) {
-      	  System.out.println("추가주문을 원하시는 메뉴를 선택해주세요.");
-      	  System.out.println("1.버거  2.음료  3.디저트  4.세트  5.이전으로");
-      	  
-      	  pick = choice.nextInt();
-	          choice.nextLine();
+      	   addmenu(id);
+         } else {
+      	   System.out.println("< 1~2 > 다시 선택해주세요.(T_T)");
+      	   System.out.println("-----------------------------------------------");
+      	   add(id);
+      	   
+         }
+		
+	}
+	
+	//추가주문 메뉴출력
+	public void addmenu(String id) {
+		
+		System.out.println("추가주문을 원하시는 메뉴를 선택해주세요.");
+    	System.out.println("1.버거  2.음료  3.디저트  4.세트");
+    	  
+    	  pick = choice.nextInt();
+	      choice.nextLine();
 	          
 	          if(pick==1) {
 	        	  selectBurger(id);
@@ -281,20 +311,12 @@ public class custorder {
 	        	  selectDs(id);
 	          } else if(pick==4) {
 	        	  selectSet(id);
-	          } else if(pick==5){
-	        	  selectSet(id);
 	          } else {
-	        	  System.out.println("< 1~5 > 다시 선택해주세요.(T_T)");
+	        	  System.out.println("< 1~4 > 다시 선택해주세요.(T_T)");
 	        	  System.out.println("-----------------------------------------------");
-	        	  selectSet(id);
+	        	  addmenu(id);
 	          }
-	          
-         } else {
-      	   System.out.println("< 1~2 > 다시 선택해주세요.(T_T)");
-      	   System.out.println("-----------------------------------------------");
-      	   add(id);
-      	   
-         }
+		
 		
 	}
 	
@@ -331,25 +353,7 @@ public class custorder {
            }
            
            System.out.println("버거선택이 완료되었습니다~~~~!^0^");
-           System.out.println("-----------------------------------------------");
-           System.out.println("주문이 끝났으면 < 1 >,");
-           System.out.println("추가주문을 원하시면 < 2 >,");
-           System.out.println("다음화면(>음료선택)으로 넘어가시려면 < 3 > 를 눌러주세요.");
-           System.out.println("-----------------------------------------------");
-           
-           pick = choice.nextInt();
-           choice.nextLine();
-   	
-           if(pick == 1) {
-        	   bag();
-           } else if (pick == 2) {
-        	   selectBurger(id);
-           } else if (pick == 3) {
-        	   selectDrink(id); 
-           } else {
-        	   System.out.println("< 1~3 > 다시 선택해주세요.(T_T)");
-        	   selectBurger(id);
-           }
+           add(id);
            
         } catch (SQLException e) {
            e.printStackTrace();
@@ -391,25 +395,7 @@ public class custorder {
 	        }
 	        
 	        System.out.println("음료선택이 완료되었습니다~~~~!^0^");
-	        System.out.println("------------------------------------------------");
-	        System.out.println("주문이 끝났으면 < 1 >,");
-	        System.out.println("추가주문을 원하시면 < 2 >,");
-	        System.out.println("다음화면(>디저트선택)으로 넘어가시려면 < 3 > 를 눌러주세요.");
-	        System.out.println("------------------------------------------------");
-	        
-	        pick = choice.nextInt();
-	        choice.nextLine();
-	        
-	        if(pick == 1) {
-	        	bag();
-	        } else if (pick == 2) {
-	        	selectDrink(id);
-	        } else if (pick == 3) {
-	        	selectDs(id); 
-	        } else {
-	        	System.out.println("< 1~3 > 다시 선택해주세요.(T_T)");
-	        	selectDrink(id);
-	        }
+	        add(id);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -439,23 +425,19 @@ public class custorder {
 			burger.printDataDessert();
 			int selectds = choice.nextInt();
 			
-			pstmt.setString(1, id);
-			pstmt.setInt(2, selectds);
-			pstmt.setString(3, id);
-			pstmt.executeUpdate();
-			
-			System.out.println("디저트선택이 완료되었습니다.");
-			System.out.println("주문이 끝났으면 < 1 >,");
-	        System.out.println("추가주문을 원하시면 < 2 > 를 눌러주세요.");
+			System.out.println("수량을 선택해주세요.(0~9)");
 	           
-	        pick = choice.nextInt();
+	        int num = choice.nextInt();
 	        choice.nextLine();
-	   	
-	        if(pick == 1) {
-	        	bag();
-	        } else if (pick == 2) {
-	        	addDs(id);
+	           
+	        for(int i=1; i<=num; i++) {
+				pstmt.setString(1, id);
+				pstmt.setInt(2, selectds);
+				pstmt.setString(3, id);
+				pstmt.executeUpdate();
 	        }
+			System.out.println("디저트선택이 완료되었습니다~~~~!^0^");
+			add(id);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -474,29 +456,35 @@ public class custorder {
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			System.out.println("주문하신 정보가 맞는지 확인해주세요.");
-			System.out.println("취소하시려면 < 1 >, 메인메뉴로 돌아가시려면 < 2 >"
-					+ ", 결제를 원하시면 < 3 > 을 눌러주세요!");
 			
-			pick = choice.nextInt();
-	        choice.nextLine();
-			
-			if (pick == 1) {
-				cancel(id);
-			} else if (pick == 2) {
+			while (pick!=1 || pick !=2 || pick !=3) {
+				System.out.println("취소하시려면 < 1 >, 메인메뉴로 돌아가시려면 < 2 >"
+						+ ", 결제를 원하시면 < 3 > 을 눌러주세요!");
 				
-			} else if (pick == 3) {
+				pick = choice.nextInt();
+		        choice.nextLine();
 				
+				if (pick == 1) {
+					cancel(id);
+				} else if (pick == 2) {
+					pick();
+				} else if (pick == 3) {
+					bill();
+				} else {
+					System.out.println("< 1~3 > 다시 선택해주세요.(T_T)");
+					System.out.println("-----------------------------------------------");
+				}
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
-			whereCheck();
 		}
 		
 	}
 	
+	//취소
 	//주문수량 취소
 	public void cancel(String id) {
 		try {
@@ -509,22 +497,29 @@ public class custorder {
 			
 			System.out.println("취소하실 메뉴번호를 선택해주세요.");
 			System.out.println("1.버거  2.음료  3.디저트  4.세트");
-			
 			pick = choice.nextInt();
 	        choice.nextLine();
-	        
-			if (pick == 1) {
-				burger.myorderlistbug(id);
-			} else if (pick == 2) {
-				burger.myorderlistdk(id);
-			} else if (pick == 3) {
-				burger.myorderlistdes(id);
-			} else if (pick == 4) {
-				burger.myorderlistset(id);
-			} else {
-				System.out.println("ㅠㅠ 다시 선택해주세요.");
-				cancel(id);
+			
+			while (pick!=1 || pick !=2 || pick !=3 || pick !=4) {
+				
+				pick = choice.nextInt();
+		        choice.nextLine();
+		        
+				if (pick == 1) {
+					burger.myorderlistbug(id);
+				} else if (pick == 2) {
+					burger.myorderlistdk(id);
+				} else if (pick == 3) {
+					burger.myorderlistdes(id);
+				} else if (pick == 4) {
+					burger.myorderlistset(id);
+				} else {
+					System.out.println("< 1~4 > 다시 선택해주세요.(T_T)");
+					System.out.println("-----------------------------------------------");
+					
+				}
 			}
+			
 			
 			Scanner choice = new Scanner(System.in);
 			int cancelBuger = choice.nextInt();
@@ -545,10 +540,11 @@ public class custorder {
 			e.printStackTrace();
 		} finally {
 			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+			bag();
 		}
 	}
 
-	
+	//버거합계
 	//버거합계
 	public int burgersum(String id) {
 		int str=0;
@@ -577,6 +573,7 @@ public class custorder {
 	}
 	
 	//음료합계
+	//음료합계
 	public int drinksum(String id) {
 		int str=0;
 		
@@ -603,6 +600,7 @@ public class custorder {
 		return str;
 	}
 	
+	//디저트합계
 	//디저트합계
 	public int dessertsum(String id) {
 		int str=0;
@@ -631,6 +629,7 @@ public class custorder {
 	}
 	
 	//세트합계
+	//세트합계
 	public int setsum(String id) {
 		int str=0;
 		
@@ -657,7 +656,7 @@ public class custorder {
 		return str;
 	}
 	
-	
+	//영수증
 	//영수증
 	public int bill() {
 		check.date();
@@ -672,6 +671,10 @@ public class custorder {
 			
 			int sum = i+j+k;			
 			//double point = sum*0.05;
+			System.out.println("*~~~~* 주문 리스트 *~~~~*");
+			System.out.println("주문번호\t 고객번호\t 버거\t 음료\t 디저트\t 세트");
+			burger.printDataBag();
+			
 			System.out.println(sum);
 			
 			bill = sum;
@@ -680,11 +683,13 @@ public class custorder {
 			e.printStackTrace();
 		} finally {
 			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+			whereCheck();
 		}
 		return bill;
 		
 	}
 	
+	//결제방법
 	//결제방법
 	public void whereCheck() {
 		
@@ -697,14 +702,20 @@ public class custorder {
 		if(pick == 1) {	
 			bill();
 			System.out.println(bill() + " 원이 카드로 결제가 되었습니다.\n"
-					+ " 감사합니다!");
-			System.out.println("로그인 화면으로 돌아갑니다.");
+					+ " 감사합니다! 또 방문해주세요! ^0^ !!");
+			System.out.println("-----------------------------------------------");
+			System.out.println("시작 화면으로 돌아갑니다.");
+			start();
 		} else if (pick == 2) {
 			bill();
 			System.out.println(bill() + " 원이 현금으로 결제가 되었습니다.\n"
-					+ " 감사합니다!");
+					+ " 감사합니다! 또 방문해주세요! ^0^ !!");
+			System.out.println("-----------------------------------------------");
+			System.out.println("시작 화면으로 돌아갑니다.");
+			start();
 		} else {
-			System.out.println("다시 입력해주세요.");
+			System.out.println("< 1~2 > 다시 선택해주세요.(T_T)");
+			System.out.println("-----------------------------------------------");
 			whereCheck();
 		}
 	}
