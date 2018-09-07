@@ -12,6 +12,12 @@ public class BurgerVO {
 		this.bgPrice = bgPrice;		
 	}
 	
+	BurgerVO() {
+		this.bgId = bgId;
+		this.bgName = bgName;
+		this.bgPrice = bgPrice;		
+	}
+	
 	public int getBgId() {
 		return bgId;
 	}
@@ -38,9 +44,19 @@ public class BurgerVO {
 	
 	@Override
 	public String toString() {
-		return "BurgerVO [bgId=" + bgId + ", bgName=" + bgName
-								+ ", bgPrice=" + bgPrice + "]";
+		return bgId + "\t" + bgName
+								+ "\t" + bgPrice;
 	}
 	
+	public void prindData() {
+		//System.out.println(bgId + "\t" + bgName + "\t" + bgPrice);
+		System.out.printf("%d \t%s \t%1d \n", bgId, bgName, bgPrice);
+		
+		
+	}
+	
+	public void title() {
+		System.out.println("ID\t BURGER\t PRICE");
+		}
 	
 }

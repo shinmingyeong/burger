@@ -2,12 +2,28 @@ package com.mystudy.burgerproject;
 
 public class DessertVO {
 	
+	private int dsId;
 	private String dsName;
-	private String dsPrice;
+	private int dsPrice;
 	
-	DessertVO(String dsName, String dsPrice) {
+	DessertVO(int dsId, String dsName, int dsPrice) {
+		this.dsId = dsId;
 		this.dsName = dsName;
 		this.dsPrice = dsPrice;
+	}
+	
+	DessertVO() {
+		this.dsId = dsId;
+		this.dsName = dsName;
+		this.dsPrice = dsPrice;
+	}
+	
+	public int getDsId() {
+		return dsId;
+	}
+	
+	public void setDsId(int dsId) {
+		this.dsId = dsId;
 	}
 
 	public String getDsName() {
@@ -17,18 +33,18 @@ public class DessertVO {
 	public void setDsName(String dsName) {
 		this.dsName = dsName;
 	}
-
-	public String getDsPrice() {
+	
+	public int getDsPrice() {
 		return dsPrice;
 	}
-
-	public void setDsPrice(String dsPrice) {
+	
+	public void setDsPrice(int dsPrice) {
 		this.dsPrice = dsPrice;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Dessert [dsName=" + dsName + ", dsPrice=" + dsPrice + "]";
+		return dsId + "\t" + dsName + "\t" + dsPrice;
 	}
-
+	
 }

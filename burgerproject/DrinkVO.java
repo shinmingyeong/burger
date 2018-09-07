@@ -2,12 +2,28 @@ package com.mystudy.burgerproject;
 
 public class DrinkVO {
 	
+	private int dkId;
 	private String dkName;
-	private String dkPrice;
+	private int dkPrice;
 	
-	DrinkVO(String dkName, String dkPrice) {
+	DrinkVO(int dkId, String dkName, int dkPrice) {
+		this.dkId = dkId;
 		this.dkName = dkName;
 		this.dkPrice = dkPrice;
+	}
+	
+	DrinkVO() {
+		this.dkId = dkId;
+		this.dkName = dkName;
+		this.dkPrice = dkPrice;
+	}
+
+	public int getDkId() {
+		return dkId;
+	}
+
+	public void setDkId(int dkId) {
+		this.dkId = dkId;
 	}
 
 	public String getDkName() {
@@ -18,17 +34,18 @@ public class DrinkVO {
 		this.dkName = dkName;
 	}
 
-	public String getDkPrice() {
+	public int getDkPrice() {
 		return dkPrice;
 	}
 
-	public void setDkPrice(String dkPrice) {
+	public void setDkPrice(int dkPrice) {
 		this.dkPrice = dkPrice;
 	}
 
 	@Override
 	public String toString() {
-		return "DrinkVO [dkName=" + dkName + ", dkPrice=" + dkPrice + "]";
+		return dkId + "\t" + dkName + "\t" + dkPrice;
 	}
+	
 
 }
